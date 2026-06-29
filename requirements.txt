@@ -1,0 +1,12 @@
+langchain
+langgraph
+langchain-openai
+openai
+chromadb
+streamlit
+fastapi
+uvicorn
+python-dotenv
+pydantic
+sqlalchemy
+pypdf
