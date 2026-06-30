@@ -2,24 +2,43 @@ import streamlit as st
 import sys
 import os
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+# Add project root to Python path
+sys.path.append(
+    os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..")
+    )
+)
 
 from agents.requirements_agent import gather_requirements
 from agents.user_story_agent import generate_user_stories
 from agents.risk_agent import analyze_risks
 from agents.architecture_agent import suggest_architecture
 
-st.set_page_config(page_title="AI Business Analyst", layout="wide")
+# -----------------------
+# Streamlit Configuration
+# -----------------------
+st.set_page_config(
+    page_title="AI Business Analyst",
+    layout="wide"
+)
 
 st.title("🤖 Multi-Agent AI Business Analyst")
 
+# -----------------------
+# User Input
+# -----------------------
 user_request = st.text_area(
     "Describe your software requirement:",
     height=200
 )
 
+# -----------------------
+# Run Analysis
+# -----------------------
 if st.button("Run Multi-Agent Analysis"):
+
     if user_request:
+
         with st.spinner("Requirements Agent analyzing..."):
             requirements = gather_requirements(user_request)
 
@@ -34,12 +53,17 @@ if st.button("Run Multi-Agent Analysis"):
 
         st.success("Multi-Agent Analysis Complete")
 
-        tab1, tab2, tab3, tab4 = st.tabs([
-            "📋 Requirements",
-            "📝 User Stories",
-            "⚠️ Risks",
-            "🏗️ Architecture"
-        ])
+        # -----------------------
+        # Tabs
+        # -----------------------
+        tab1, tab2, tab3, tab4 = st.tabs(
+            [
+                "📋 Requirements",
+                "📝 User Stories",
+                "⚠️ Risks",
+                "🏗️ Architecture"
+            ]
+        )
 
         with tab1:
             st.markdown(requirements)
@@ -52,6 +76,43 @@ if st.button("Run Multi-Agent Analysis"):
 
         with tab4:
             st.markdown(architecture)
+
+        # -----------------------
+        # Download Report
+        # -----------------------
+        full_report = f"""
+# Multi-Agent AI Business Analyst Report
+
+## Stakeholder Request
+{user_request}
+
+---
+
+## 1. Requirements Analysis
+{requirements}
+
+---
+
+## 2. User Stories
+{user_stories}
+
+---
+
+## 3. Risk Analysis
+{risks}
+
+---
+
+## 4. Architecture Recommendation
+{architecture}
+"""
+
+        st.download_button(
+            label="📥 Download Business Analysis Report",
+            data=full_report,
+            file_name="business_analysis_report.md",
+            mime="text/markdown"
+        )
 
     else:
         st.warning("Please enter a requirement first.")
